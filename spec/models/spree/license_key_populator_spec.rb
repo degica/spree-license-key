@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'timecop'
 
 describe Spree::LicenseKeyPopulator do
   describe '.populate' do
@@ -27,6 +28,12 @@ describe Spree::LicenseKeyPopulator do
         it "assigns inventory unit id to each license key" do
           keys = populator_class.populate(inventory_unit, quantity)
           keys.each { |key| key.inventory_unit_id.should == inventory_unit.id }
+        end
+
+        it "updates timestamps on license keys when they are assigned" do
+          t = Date.today + 5
+          keys = Timecop.freeze(t) { populator_class.populate(inventory_unit, quantity) }
+          keys.each { |key| key.updated_at.should == t }
         end
 
         it "raises error for insufficient keys if none are available" do

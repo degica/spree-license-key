@@ -25,7 +25,7 @@ module Spree
     private
 
     def self.assign_keys!(keys, inventory_unit)
-      keys.update_all(inventory_unit_id: inventory_unit.id)
+      keys.update_all(inventory_unit_id: inventory_unit.id, updated_at: DateTime.now)
     end
   end
 end
