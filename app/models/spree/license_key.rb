@@ -4,7 +4,7 @@ module Spree
     belongs_to :variant, :class_name => "Spree::Variant"
     belongs_to :license_key_type, :class_name => "Spree::LicenseKeyType"
 
-    attr_accessible :license_key, :inventory_unit_id, :variant_id, :void
+    attr_accessible :license_key, :inventory_unit_id, :variant_id, :void, :memo
 
     scope :available, where(inventory_unit_id: nil, void: false)
     scope :used, where('(inventory_unit_id IS NOT NULL) OR (void IS ?)', true)
