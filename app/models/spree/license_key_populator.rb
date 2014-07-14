@@ -6,9 +6,10 @@ module Spree
         license_key_types = variant.license_key_types.empty? ? [nil] : variant.license_key_types
         license_key_types.each do |license_key_type|
           if keys = get_available_keys(inventory_unit, quantity, license_key_type)
+            after_success_get_available_keys(variant) if respond_to?(:after_success_get_available_keys)
             assign_keys!(keys, inventory_unit)
           else
-            raise InsufficientLicenseKeys, "Variant: #{inventory_unit.variant.to_param}, License Key Type: #{license_key_type.try(:id)}"
+            respond_to?(:after_failure_get_available_keys) ? after_failure_get_available_keys(variant) : raise(InsufficientLicenseKeys, "Variant: #{inventory_unit.variant.to_param}, License Key Type: #{license_key_type.try(:id)}")
           end
         end
         LicenseKey.where(inventory_unit_id: inventory_unit.id).order('id desc').all
