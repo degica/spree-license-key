@@ -48,7 +48,7 @@ Spree::Order.class_eval do
 
   def after_finalize!
     electronic_shipments.each do |shipment|
-      shipment.ship! if shipment.can_ship?
+      shipment.delay.ship! if shipment.can_ship?
     end
   end
 

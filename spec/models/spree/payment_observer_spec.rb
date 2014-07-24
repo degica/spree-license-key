@@ -6,7 +6,7 @@ describe Spree::PaymentObserver do
     let(:payment) { build_stubbed :payment, :order => order}
     let(:order) { build_stubbed :order }
     let(:transition) { double StateMachine::Transition }
-    let(:shipment) { double Spree::Shipment }
+    let(:shipment) { build_stubbed :shipment }
 
     context "when transition is to shipped" do
       before do
@@ -20,6 +20,12 @@ describe Spree::PaymentObserver do
         it 'delivers the electronic item' do
           shipment.should_receive(:ship!).once
           observer.after_transition(payment, transition)
+        end
+
+        it 'creates a delayed job' do
+          Delayed::Worker.delay_jobs = true
+          expect { observer.after_transition(payment, transition) }.to change { Delayed::Job.count }.by(1)
+          Delayed::Worker.delay_jobs = false
         end
       end
     end

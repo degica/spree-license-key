@@ -27,6 +27,9 @@ Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require f }
 require 'spree/core/testing_support/factories'
 require 'spree/core/url_helpers'
 
+# don't delay jobs if we are testing
+Delayed::Worker.delay_jobs = !Rails.env.test?
+
 RSpec.configure do |config|
   FactoryGirl.find_definitions
   config.include FactoryGirl::Syntax::Methods
