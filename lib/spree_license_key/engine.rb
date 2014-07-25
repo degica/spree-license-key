@@ -19,6 +19,6 @@ module SpreeLicenseKey
 
     config.to_prepare &method(:activate).to_proc
 
-    config.active_record.observers = ['spree/shipment_observer', 'spree/payment_observer', 'spree/order_observer']
+    config.active_record.observers = ['spree/shipment_observer', 'spree/payment_observer' ]
   end
 end
