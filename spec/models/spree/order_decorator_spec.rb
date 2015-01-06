@@ -84,4 +84,13 @@ describe Spree::Order do
     end
 
   end
+
+  describe "after update callback", focus:true do
+    let!(:shipment) { create :shipment, :order => order, :shipping_method => electronic_shipping_method }
+    it "destroys shipments without inventory units" do
+      expect {
+        order.save!
+      }.to change { order.shipments.count }.by(-1)
+    end
+  end
 end
