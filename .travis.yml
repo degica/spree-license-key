@@ -10,7 +10,7 @@ env:
 - DB=sqlite3
 - DB=mysql
 rvm:
-- 1.9.3
+- 2.1.5
 notifications:
   hipchat:
     rooms:
