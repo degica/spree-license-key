@@ -12,7 +12,7 @@ describe Spree::LicenseKeyPopulator do
       it "raises NotImplementedError" do
         populator = Spree::LicenseKeyPopulator.new(variant)
         expect {
-          populator.get_available_keys(inventory_unit, quantity)
+          populator.get_available_keys(quantity)
         }.to raise_error(NotImplementedError)
       end
     end
@@ -22,8 +22,8 @@ describe Spree::LicenseKeyPopulator do
       let(:populator_class) do
         Class.new(Spree::LicenseKeyPopulator) do
           # Minimal populator function, returns false if there are not enough keys.
-          def get_available_keys(inventory_unit, quantity, license_key_type=nil)
-            quantity <= Spree::LicenseKey.count ?  Spree::LicenseKey.scoped : false
+          def get_available_keys(quantity, license_key_type=nil)
+            quantity <= Spree::LicenseKey.count ? Spree::LicenseKey.scoped : false
           end
         end
       end
@@ -74,7 +74,7 @@ describe Spree::LicenseKeyPopulator do
         it_behaves_like "license key populator"
 
         it "calls get_available_keys once with nil license_key_type" do
-          populator.should_receive(:get_available_keys).once.with(inventory_unit, quantity, nil).and_call_original
+          populator.should_receive(:get_available_keys).once.with(quantity, nil).and_call_original
           populator.populate(inventory_unit, quantity)
         end
       end
@@ -92,8 +92,8 @@ describe Spree::LicenseKeyPopulator do
         end
 
         it "calls get_available_keys once for each license key type" do
-          populator.should_receive(:get_available_keys).once.with(inventory_unit, quantity, license_key_type_1).and_call_original
-          populator.should_receive(:get_available_keys).once.with(inventory_unit, quantity, license_key_type_2).and_call_original
+          populator.should_receive(:get_available_keys).once.with(quantity, license_key_type_1).and_call_original
+          populator.should_receive(:get_available_keys).once.with(quantity, license_key_type_2).and_call_original
           populator.populate(inventory_unit, quantity)
         end
       end
