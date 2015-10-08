@@ -13,7 +13,7 @@ module Spree
     def populate(inventory_unit, quantity)
       ActiveRecord::Base.transaction do
         license_key_types.each do |license_key_type|
-          if keys = get_available_keys(inventory_unit, quantity, license_key_type)
+          if keys = get_available_keys(quantity, license_key_type)
             success(inventory_unit, license_key_type)
             assign_keys!(keys, inventory_unit)
           else
@@ -25,7 +25,7 @@ module Spree
     end
 
     # Gets keys from source. Should return a relation.
-    def get_available_keys(inventory_unit, quantity, license_key_type=nil)
+    def get_available_keys(quantity, license_key_type=nil)
       raise NotImplementedError, "Spree::LicenseKeyPopulator must implement a get_available_keys method."
     end
 
